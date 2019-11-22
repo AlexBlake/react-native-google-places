@@ -29,7 +29,8 @@
                        bounds: (GMSCoordinateBounds *)autocompleteBounds
                        boundsMode: (GMSAutocompleteBoundsMode)autocompleteBoundsMode
                      resolver: (RCTPromiseResolveBlock)resolve
-                     rejecter: (RCTPromiseRejectBlock)reject;
+                     rejecter: (RCTPromiseRejectBlock)reject
+                     displayOptions: (NSDictionary *)displayOptions;
 {
     _resolve = resolve;
     _reject = reject;
@@ -40,6 +41,22 @@
     viewController.autocompleteBoundsMode = autocompleteBoundsMode;
     viewController.placeFields = selectedFields;
 	viewController.delegate = self;
+
+    NSArray *whiteList = @[
+        @"tableCellBackgroundColor",
+        @"tableCellSeparatorColor",
+        @"primaryTextColor",
+        @"primaryTextHighlightColor",
+        @"secondaryTextColor",
+        @"tintColor",
+    ];
+    NSPredicate *whitelistPredicate = [NSPredicate predicateWithFormat:@"self IN %@", whiteList];
+    NSDictionary *whitelistedOptions = [displayOptions dictionaryWithValuesForKeys:[displayOptions.allKeys filteredArrayUsingPredicate:whitelistPredicate]];
+    
+    [whitelistedOptions enumerateKeysAndObjectsUsingBlock:^(NSString* key, NSString* value, BOOL* stop) {
+        [viewController setValue:[self hexStringToColor: value] forKey:key];
+    }];
+
     UIViewController *topController = [self getTopController];
 	[topController presentViewController:viewController animated:YES completion:nil];
 }
@@ -94,6 +111,15 @@
     UIViewController *topController = [UIApplication sharedApplication].delegate.window.rootViewController;
     while (topController.presentedViewController) { topController = topController.presentedViewController; }
     return topController;
+}
+
+- (UIColor *) hexStringToColor:(NSString *) color 
+{
+    unsigned rgbValue = 0;
+    NSScanner *scanner = [NSScanner scannerWithString:color];
+    [scanner setScanLocation:1]; // bypass '#' character
+    [scanner scanHexInt:&rgbValue];
+    return [UIColor colorWithRed:((rgbValue & 0xFF0000) >> 16)/255.0 green:((rgbValue & 0xFF00) >> 8)/255.0 blue:(rgbValue & 0xFF)/255.0 alpha:1.0];
 }
 
 @end

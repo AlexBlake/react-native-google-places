@@ -69,11 +69,12 @@ RCT_EXPORT_METHOD(openAutocompleteModal: (NSDictionary *)options
         
         NSDictionary *locationBias = [RCTConvert NSDictionary:options[@"locationBias"]];
         NSDictionary *locationRestriction = [RCTConvert NSDictionary:options[@"locationRestriction"]];
+        NSDictionary *displayOptions = options[@"display"];
         
         
         GMSCoordinateBounds *autocompleteBounds = [self getBounds:locationBias andRestrictOptions:locationRestriction];
 
-        [acController openAutocompleteModal: autocompleteFilter placeFields: selectedFields bounds: autocompleteBounds boundsMode: self.boundsMode resolver: resolve rejecter: reject];
+        [acController openAutocompleteModal: autocompleteFilter placeFields: selectedFields bounds: autocompleteBounds boundsMode: self.boundsMode resolver: resolve rejecter: reject displayOptions: displayOptions];
     }
     @catch (NSException * e) {
         reject(@"E_OPEN_FAILED", @"Could not open modal", [self errorFromException:e]);

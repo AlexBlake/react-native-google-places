@@ -14,7 +14,8 @@
                        bounds: (GMSCoordinateBounds *)autocompleteBounds
                    boundsMode: (GMSAutocompleteBoundsMode)autocompleteBoundsMode
                      resolver: (RCTPromiseResolveBlock)resolve
-                     rejecter: (RCTPromiseRejectBlock)reject;
+                     rejecter: (RCTPromiseRejectBlock)reject
+                     displayOptions: (NSDictionary *)displayOptions;
                      
 
 @end
