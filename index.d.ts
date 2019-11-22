@@ -554,6 +554,9 @@ declare module "react-native-google-places" {
       useOverlay: false,
       initialQuery: '',
       useSessionToken: true,
+      display: {
+        // can add default colors or should we leave it empty let system default?
+      },
       locationBias: {
         latitudeSW: 0,
         longitudeSW: 0,
